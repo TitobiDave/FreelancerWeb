@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Freelancer.Data.Models.Auth;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Freelancer.Web.Controllers.Auth
 {
@@ -11,8 +12,20 @@ namespace Freelancer.Web.Controllers.Auth
             return View();
         }
 
-        [HttpGet]
+        [HttpGet("account/register")]
         public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost("account/registerfreelancer")]
+        public IActionResult Register([FromForm] RegisterDto<FreelancerUser> registerDto)
+        {
+            return View();
+        }
+
+        [HttpPost("account/registerhirer")]
+        public IActionResult Register([FromForm] RegisterDto<Hirer> registerDto)
         {
             return View();
         }

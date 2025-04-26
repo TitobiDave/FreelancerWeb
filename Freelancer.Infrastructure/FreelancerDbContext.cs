@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Freelancer.Data.Models.Auth;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -20,5 +21,8 @@ namespace Freelancer.Infrastructure
         {
             base.OnModelCreating(builder);  
         }
+
+        public DbSet<FreelancerUser> freelancer { get; set; }
+        public DbSet<Hirer> hirer {  get; set; }
     }
 }
