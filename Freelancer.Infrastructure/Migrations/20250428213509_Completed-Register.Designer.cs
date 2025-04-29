@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Freelancer.Infrastructure.Migrations
 {
     [DbContext(typeof(FreelancerDbContext))]
-    [Migration("20250425152357_Initial_Migrate")]
-    partial class Initial_Migrate
+    [Migration("20250428213509_Completed-Register")]
+    partial class CompletedRegister
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,40 @@ namespace Freelancer.Infrastructure.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("Freelancer.Data.Models.Auth.FreelancerUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FreelancerUser");
+                });
+
+            modelBuilder.Entity("Freelancer.Data.Models.Auth.Hirer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ComanyName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Hirer");
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -89,6 +123,11 @@ namespace Freelancer.Infrastructure.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .HasColumnType("nvarchar(13)");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -140,6 +179,10 @@ namespace Freelancer.Infrastructure.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasDiscriminator().HasValue("IdentityUser");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -223,6 +266,23 @@ namespace Freelancer.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Freelancer.Data.Models.Auth.Fuser", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+
+                    b.Property<int?>("FreelancerUserId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("HirerId")
+                        .HasColumnType("int");
+
+                    b.HasIndex("FreelancerUserId");
+
+                    b.HasIndex("HirerId");
+
+                    b.HasDiscriminator().HasValue("Fuser");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -272,6 +332,21 @@ namespace Freelancer.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Freelancer.Data.Models.Auth.Fuser", b =>
+                {
+                    b.HasOne("Freelancer.Data.Models.Auth.FreelancerUser", "FreelancerUser")
+                        .WithMany()
+                        .HasForeignKey("FreelancerUserId");
+
+                    b.HasOne("Freelancer.Data.Models.Auth.Hirer", "Hirer")
+                        .WithMany()
+                        .HasForeignKey("HirerId");
+
+                    b.Navigation("FreelancerUser");
+
+                    b.Navigation("Hirer");
                 });
 #pragma warning restore 612, 618
         }

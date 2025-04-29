@@ -1,12 +1,61 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Freelancer.Data;
+using Freelancer.Data.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Newtonsoft.Json;
+
 
 namespace Freelancer.Web.Controllers
 {
     public class BaseController : Controller
     {
-        public IActionResult Index()
+
+
+        public  void Response(ResponseModel response)
         {
-            return View();
+            switch (response.ErrorCodes)
+            {
+                case ErrorCodes.Successful:
+
+                    TempData["Result"] = JsonConvert.SerializeObject(new
+                    {
+                        title = "",
+                        message = response.Message,
+                        error = "success"
+                    });
+                    break;
+
+                case ErrorCodes.Failed:
+                    TempData["Result"] = JsonConvert.SerializeObject(new
+                    {
+                        title = "Ooops...",
+                        message = response.Message,
+                        error = "error"
+                    });
+                    break;
+
+                case ErrorCodes.Created:
+                    TempData["Result"] = JsonConvert.SerializeObject(new
+                    {
+                        title = "Success",
+                        message = response.Message,
+                        error = "success"
+                    });
+                    break;
+                default:
+                    TempData["Result"] = JsonConvert.SerializeObject(new
+                    {
+                        title = "Ooops...",
+                        message = response.Message,
+                        error = "error"
+                    });
+                    break;
+            }
         }
+
+
     }
+
+
+  
 }

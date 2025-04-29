@@ -1,0 +1,11 @@
+﻿// Bootswatch variables
+@import "_variables.scss";
+
+// BOOTSTRAP
+@import "../wwwroot/lib/bootstrap/scss/bootstrap.scss";
+
+// Bootswatch
+@import "_bootswatch.scss";
+
+// Project custom styling code goes here
+@import "custom.scss";
