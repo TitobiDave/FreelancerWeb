@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Freelancer.Data.Models.Auth
 {
-    public class Hirer: Fuser
+    public class Hirer
     {
+        public int Id { get; set; }
         public string ComanyName { get; set; }
 
         

@@ -22,6 +22,40 @@ namespace Freelancer.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Freelancer.Data.Models.Auth.FreelancerUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FreelancerUser");
+                });
+
+            modelBuilder.Entity("Freelancer.Data.Models.Auth.Hirer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ComanyName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Hirer");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -88,8 +122,8 @@ namespace Freelancer.Infrastructure.Migrations
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
-                        .HasMaxLength(21)
-                        .HasColumnType("nvarchar(21)");
+                        .HasMaxLength(13)
+                        .HasColumnType("nvarchar(13)");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -229,26 +263,21 @@ namespace Freelancer.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Freelancer.Data.Models.Auth.FreelancerUser", b =>
+            modelBuilder.Entity("Freelancer.Data.Models.Auth.Fuser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("FreelancerUserId")
+                        .HasColumnType("int");
 
-                    b.HasDiscriminator().HasValue("FreelancerUser");
-                });
+                    b.Property<int?>("HirerId")
+                        .HasColumnType("int");
 
-            modelBuilder.Entity("Freelancer.Data.Models.Auth.Hirer", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
+                    b.HasIndex("FreelancerUserId");
 
-                    b.Property<string>("ComanyName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.HasIndex("HirerId");
 
-                    b.HasDiscriminator().HasValue("Hirer");
+                    b.HasDiscriminator().HasValue("Fuser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -300,6 +329,21 @@ namespace Freelancer.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Freelancer.Data.Models.Auth.Fuser", b =>
+                {
+                    b.HasOne("Freelancer.Data.Models.Auth.FreelancerUser", "FreelancerUser")
+                        .WithMany()
+                        .HasForeignKey("FreelancerUserId");
+
+                    b.HasOne("Freelancer.Data.Models.Auth.Hirer", "Hirer")
+                        .WithMany()
+                        .HasForeignKey("HirerId");
+
+                    b.Navigation("FreelancerUser");
+
+                    b.Navigation("Hirer");
                 });
 #pragma warning restore 612, 618
         }

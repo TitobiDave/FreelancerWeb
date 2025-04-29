@@ -4,17 +4,34 @@
 }
  *@
 
+<link href="~/css/custom.scss" rel="stylesheet">
 <div class="w-100 h-100 d-flex align-items-center justify-content-center">
     <div class="d-flex flex-column gap-4 align-items-center justify-content-center w-100 ">
-        <button class="text-center p-lg-5 rounded-3 shadow w-50 bg-white  border-0" type="button"  data-bs-toggle="modal" data-bs-target="#bd-example-modal-fr">
-            <p class="user-select-none">Sign in as Freelancer</p>
-        </button>
-        <button class="text-center p-lg-5 rounded-3 shadow border-0 w-50 " type="button" data-bs-toggle="modal" data-bs-target="#bd-example-modal-hr">
-            <p class="user-select-none">Sign in as hirer</p>
-        </button>
+        <a class="click-btn btn-style506 shadow p-lg-5" data-bs-toggle="modal" data-bs-target="#bd-example-modal-fr">
+            Sign in as Freelancer
+        </a>
+        <a class="click-btn btn-style506H p-lg-5 shadow" data-bs-toggle="modal" data-bs-target="#bd-example-modal-hr">
+            Sign in as hirer
+        </a>
     </div>
 </div>
 
 
-@await Html.PartialAsync("Partial/_freelancer.cshtml");
-@await Html.PartialAsync("Partial/_hirer.cshtml");
+
+@section Scripts {
+    <script>
+        var message = @Html.Raw(TempData["Result"])
+        if(message)
+        {
+            Swal.fire({
+            title: message.title,
+            text: message.message,
+            icon: message.error,
+            confirmButtonText: 'OK'
+             })
+        }
+    </script>
+}
+
+@await Html.PartialAsync("Partial/_freelancer.cshtml")
+@await Html.PartialAsync("Partial/_hirer.cshtml")

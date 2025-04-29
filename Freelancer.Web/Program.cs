@@ -1,5 +1,7 @@
 using Freelancer.Data.Models.Auth;
 using Freelancer.Infrastructure;
+using Freelancer.Services.Services.Auth.Contract;
+using Freelancer.Services.Services.Auth.Handler;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddIdentity<Fuser, IdentityRole>().AddEntityFrameworkStores<FreelancerDbContext>();
+builder.Services.AddScoped<ICreateUser, CreateUser>();
 builder.Services.AddDbContext<FreelancerDbContext>(o =>
 {
     o.UseSqlServer(builder.Configuration.GetConnectionString("Freelancer"));

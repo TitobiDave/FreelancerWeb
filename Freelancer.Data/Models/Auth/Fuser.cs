@@ -11,5 +11,8 @@ namespace Freelancer.Data.Models.Auth
     {
         public int Id {  get; set; }
 
+        public FreelancerUser? FreelancerUser { get; set; }
+
+        public Hirer? Hirer { get; set; }
     }
 }

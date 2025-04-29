@@ -19,10 +19,9 @@ namespace Freelancer.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(builder);  
+            base.OnModelCreating(builder);
         }
 
-        public DbSet<FreelancerUser> freelancer { get; set; }
-        public DbSet<Hirer> hirer {  get; set; }
+        public DbSet<Fuser> fuser { get; set; }
     }
 }
