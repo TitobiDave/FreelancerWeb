@@ -21,6 +21,7 @@ namespace Freelancer.Web.Controllers
                     {
                         title = "",
                         message = response.Message,
+                        success = response.isSuccessful,
                         error = "success"
                     });
                     break;
@@ -30,6 +31,7 @@ namespace Freelancer.Web.Controllers
                     {
                         title = "Ooops...",
                         message = response.Message,
+                        success = response.isSuccessful,
                         error = "error"
                     });
                     break;
@@ -39,6 +41,7 @@ namespace Freelancer.Web.Controllers
                     {
                         title = "Success",
                         message = response.Message,
+                        success = response.isSuccessful,
                         error = "success"
                     });
                     break;
@@ -47,6 +50,7 @@ namespace Freelancer.Web.Controllers
                     {
                         title = "Ooops...",
                         message = response.Message,
+                        success = response.isSuccessful,
                         error = "error"
                     });
                     break;

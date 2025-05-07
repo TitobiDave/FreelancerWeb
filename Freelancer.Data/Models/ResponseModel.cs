@@ -13,5 +13,7 @@ namespace Freelancer.Data.Models
         public string Message { get; set; }
 
         public bool isSuccessful { get; set; }
+
+        public object data {  get; set; }   
     }
 }

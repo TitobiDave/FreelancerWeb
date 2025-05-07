@@ -3,7 +3,7 @@
 
 
 // Variables
-
+font
 :root {
   --#{$prefix}border-width: 2px;
   --#{$prefix}border-color: #000;
@@ -14,6 +14,9 @@
   --#{$prefix}border-color: #000;
 }
 
+/*body{
+    font-family: Roboto, sans-serif;
+}*/
 // Mixins
 
 @mixin btn-shadow(){

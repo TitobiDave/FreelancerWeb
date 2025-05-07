@@ -11,5 +11,6 @@ namespace Freelancer.Data
         Failed = 500,
         Successful = 200,
         Created = 201,
+        NotFound = 400,
     }
 }

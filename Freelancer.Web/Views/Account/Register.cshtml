@@ -21,14 +21,21 @@
 @section Scripts {
     <script>
         var message = @Html.Raw(TempData["Result"])
-        if(message)
+
+        if(message.success)
         {
+            window.location.href = "/freelancer/skillRating"
+        }
+        else{
             Swal.fire({
             title: message.title,
             text: message.message,
             icon: message.error,
-            confirmButtonText: 'OK'
+            confirmButtonText: 'OK',
+
              })
+
+           // window.location.href = "/"
         }
     </script>
 }
