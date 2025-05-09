@@ -11,5 +11,8 @@ namespace Freelancer.Services.Services.Auth.Contract
     public interface ICreateUser
     {
         public Task<ResponseModel> CreateNewUser(RegisterDto<Fuser> user);
+
+        public Task<ResponseModel> LoginNewUser(LoginDto user);
+
     }
 }

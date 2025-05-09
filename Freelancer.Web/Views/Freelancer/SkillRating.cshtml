@@ -1,0 +1,188 @@
+﻿@inject ILanguage _lang
+
+
+<style>
+    .input-wrapper {
+        margin-bottom: 1rem;
+    }
+
+    .input-icon-wrapper {
+        position: relative;
+    }
+
+        input.parsley-error {
+            border-color: #ff3860;
+            background-color: #fff6f6;
+        }
+
+    .error-icon {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #ff3860;
+        font-size: 1.2rem;
+        display: none;
+    }
+
+    input.parsley-error ~ .error-icon {
+        display: block;
+    }
+
+    .parsley-errors-list {
+        color: #ff3860;
+        font-size: 0.9rem;
+        margin-top: 0.25rem;
+        list-style: none;
+        padding: 0;
+    }
+</style>
+
+
+<div class="first">
+    @{
+        var result = await _lang.GetLanguages();
+        <p class="text-center fs-2 fw-bold">Select Technologies</p>
+
+        <div class="d-flex align-items-center justify-content-center  flex-row gap-2 flex-wrap">
+            @foreach (var item in result)
+            {
+                <input class="btn btn-success " id="items" type="button" value="@item.Language" />
+            }
+        </div>
+
+
+
+    }
+
+</div>
+<form enctype="application/x-www-form-urlencoded" method="post" id="skills" data-parsley-validate>
+    <div class="second" hidden>
+        <div class=" d-flex flex-column gap-2 align-items-center justify-content-center" id="experience">
+        </div>
+
+    </div>
+
+    <div class="third" hidden>
+
+        <div class="form-group">
+            <label class="col-form-label">How many years of experience do you have?</label>
+            <input class="form-control" data-parsley-required-message="Write your Experience" data-parsley-trigger="change" required />
+        </div>
+        <div class="form-group">
+            <label class="col-form-label">Upload relevant work experience(optional)</label>
+            <input class="form-control" type="file" multiple />
+        </div>
+        <div class="form-group">
+            <label class="col-form-label">Upload cv or resume*</label>
+            <input class="form-control " required data-parsley-required-message="Upload CV" data-parsley-trigger="change" type="file" id="fileCV" />
+        </div>
+
+
+
+
+    </div>
+</form>
+<div class="w-100 d-flex gap-1 mt-lg-5  justify-content-center">
+    <button class="btn btn-light" id="prev">Previous</button>
+    <button class="btn btn-success" id="next">Next</button>
+</div>
+@section Scripts {
+    <script>
+
+        let languages = []
+        let pages = ["first", "second", "third"]
+        let next = document.querySelector("#next")
+        let prev = document.querySelector("#prev")
+        let currentIndex = 0
+        let sub = document.getElementById("skills")
+         sub.addEventListener("submit", function (e) {
+            e.preventDefault();
+            if ($(sub).parsley().isValid()) {
+                sub.submit();
+            }
+        });
+        let divExp = document.getElementById("experience")
+        next.addEventListener("click", ()=>{
+            if(currentIndex < 2 && languages.length >0){
+                divExp.innerHTML = ""
+                 document.querySelector(`.${pages[currentIndex]}`).hidden = "hidden"
+                 currentIndex += 1
+                 document.querySelector(`.${pages[currentIndex]}`).hidden = false
+                 console.log(currentIndex)
+                 languages.forEach(elem=>{
+                        divExp.innerHTML += `<div class="d-flex align-items-center gap-2 justify-content-center" data-parsley-required="true" data-parsley-error-message="Please select your experience" required  >
+                                                <p class="fw-bold p-0 m-0">${elem.toUpperCase()}</p>
+                                        <select class="focus-none outline-none rounded p-2">
+                                             <option selected disabled>Select your Experience</option>
+                                             <option>Beginner</option>
+                                             <option>Intermediate</option>
+                                             <option>Experienced</option>
+                                         </select>
+                                       </div> `
+                    })
+             $("#experience").find('select').parsley();
+                if(currentIndex == pages.length-1){
+                    next.textContent = "Submit"
+                }
+            }
+            else if(currentIndex >= 2 && languages.length >0){
+                  $('#skills').submit();
+            }
+
+        })
+         prev.addEventListener("click", ()=>{
+            if(currentIndex > 0 && currentIndex < 3){
+                next.textContent = "Next"
+                divExp.innerHTML = ""
+                 document.querySelector(`.${pages[currentIndex]}`).hidden = "hidden"
+                 currentIndex -= 1
+                 document.querySelector(`.${pages[currentIndex]}`).hidden = false
+                 console.log(currentIndex)
+                 languages.forEach(elem=>{
+                        divExp.innerHTML += `<div class="d-flex align-items-center gap-2 justify-content-center" >
+                                                <p class="fw-bold p-0 m-0">${elem.toUpperCase()}</p>
+                                        <select required class=" rounded p-2" data-parsley-required="true" data-parsley-error-message="Please select your experience">
+                                             <option selected disabled>Select your Experience</option>
+                                             <option>Beginner</option>
+                                             <option>Intermediate</option>
+                                             <option>Experienced</option>
+                                         </select>
+                                         </div> `
+                                         $(divExp).find('select').parsley();
+                    })
+                       
+            }
+
+        })
+        let btns = document.querySelectorAll("#items")
+         btns.forEach(btn=>{
+            btn.addEventListener("click", e=>{
+                if(e.target.classList.contains("btn-success")){
+                    e.target.classList.replace("btn-success", "btn-light")
+                    languages.push(e.target.value)
+
+
+
+                }
+                else{
+                    e.target.classList.replace("btn-light", "btn-success")
+                    languages.pop(e.target.value)
+                    console.log(languages)
+                }
+
+            })
+         })
+
+         fileCV.addEventListener("click",  ()=>{
+             fileCV.classList.remove("border-danger")
+         })
+                  $("#skills").parsley({
+          errorsWrapper: '<ul class="parsley-errors-list"></ul>',
+          errorTemplate: '<li></li>',
+          errorsContainer: function(el) {
+            return el.$element.closest('.input-wrapper').find('.error-message');
+          }
+        });;
+    </script>
+}

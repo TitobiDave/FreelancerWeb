@@ -4,6 +4,7 @@ using Freelancer.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Freelancer.Infrastructure.Migrations
 {
     [DbContext(typeof(FreelancerDbContext))]
-    partial class FreelancerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250502145021_Languages2")]
+    partial class Languages2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -68,35 +71,27 @@ namespace Freelancer.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool>("isSelected")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.ToTable("Languages");
                 });
 
-            modelBuilder.Entity("Freelancer.Data.Models.Misc.ProgrammingSkill", b =>
+            modelBuilder.Entity("FreelancerUserLanguages", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("LanguagesId")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ExperienceLevel")
+                    b.Property<int>("usersId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("FreelancerUserId")
-                        .HasColumnType("int");
+                    b.HasKey("LanguagesId", "usersId");
 
-                    b.Property<int>("languageId")
-                        .HasColumnType("int");
+                    b.HasIndex("usersId");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("FreelancerUserId");
-
-                    b.HasIndex("languageId");
-
-                    b.ToTable("ProgrammingSkill");
+                    b.ToTable("FreelancerUserLanguages");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -323,19 +318,19 @@ namespace Freelancer.Infrastructure.Migrations
                     b.HasDiscriminator().HasValue("Fuser");
                 });
 
-            modelBuilder.Entity("Freelancer.Data.Models.Misc.ProgrammingSkill", b =>
+            modelBuilder.Entity("FreelancerUserLanguages", b =>
                 {
-                    b.HasOne("Freelancer.Data.Models.Auth.FreelancerUser", null)
-                        .WithMany("skills")
-                        .HasForeignKey("FreelancerUserId");
-
-                    b.HasOne("Freelancer.Data.Models.Misc.Languages", "language")
+                    b.HasOne("Freelancer.Data.Models.Misc.Languages", null)
                         .WithMany()
-                        .HasForeignKey("languageId")
+                        .HasForeignKey("LanguagesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("language");
+                    b.HasOne("Freelancer.Data.Models.Auth.FreelancerUser", null)
+                        .WithMany()
+                        .HasForeignKey("usersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -402,11 +397,6 @@ namespace Freelancer.Infrastructure.Migrations
                     b.Navigation("FreelancerUser");
 
                     b.Navigation("Hirer");
-                });
-
-            modelBuilder.Entity("Freelancer.Data.Models.Auth.FreelancerUser", b =>
-                {
-                    b.Navigation("skills");
                 });
 #pragma warning restore 612, 618
         }

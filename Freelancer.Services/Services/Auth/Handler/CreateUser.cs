@@ -18,6 +18,7 @@ namespace Freelancer.Services.Services.Auth.Handler
         private readonly UserManager<Fuser> _userManager;
         private readonly FreelancerDbContext _dbcontext;
 
+
         public CreateUser(UserManager<Fuser> freelancerManager, FreelancerDbContext dbcontext)
         {
             _userManager = freelancerManager;
@@ -28,7 +29,7 @@ namespace Freelancer.Services.Services.Auth.Handler
             try
             {
                 var checkUser =  _userManager.Users.Where(x => x.Email == user.Email);
-                if (checkUser != null)
+                if (checkUser.Any())
                 {
                     return new ResponseModel
                     {
@@ -75,6 +76,42 @@ namespace Freelancer.Services.Services.Auth.Handler
             }
             
 
+        }
+
+        public async Task<ResponseModel> LoginNewUser(LoginDto userModel)
+        {
+            try
+            {
+                var user = await _userManager.FindByEmailAsync(userModel.username);
+                if (user == null)
+                {
+                    return new ResponseModel
+                    {
+                        ErrorCodes = ErrorCodes.NotFound,
+                        isSuccessful = false,
+                        Message = "User name or password is Incorrect"
+
+                    };
+                }
+                return new ResponseModel
+                {
+                    ErrorCodes = ErrorCodes.Successful,
+                    isSuccessful = true,
+                    Message = "Login Successful",
+                    data = (Fuser)user,
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ResponseModel
+                {
+                    ErrorCodes = ErrorCodes.Failed,
+                    isSuccessful = false,
+                    Message = ex.InnerException.Message
+
+                };
+            }
+           
         }
     }
 }

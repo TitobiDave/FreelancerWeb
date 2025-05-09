@@ -2,6 +2,8 @@ using Freelancer.Data.Models.Auth;
 using Freelancer.Infrastructure;
 using Freelancer.Services.Services.Auth.Contract;
 using Freelancer.Services.Services.Auth.Handler;
+using Freelancer.Services.Services.Misc.Contract;
+using Freelancer.Services.Services.Misc.Handler;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,18 +13,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 builder.Services.AddIdentity<Fuser, IdentityRole>().AddEntityFrameworkStores<FreelancerDbContext>();
 builder.Services.AddScoped<ICreateUser, CreateUser>();
+builder.Services.AddScoped<ILanguage, LanguageService>();
 builder.Services.AddDbContext<FreelancerDbContext>(o =>
 {
     o.UseSqlServer(builder.Configuration.GetConnectionString("Freelancer"));
 });
-builder.Services.AddAuthentication()
-    .AddCookie("cookie", o =>
-    {
-        o.LoginPath = "account/login";
-        o.ExpireTimeSpan = TimeSpan.FromHours(8);
-        o.SlidingExpiration = true;
-        o.AccessDeniedPath = "account/accessdenied";
-    });
+builder.Services.AddAuthentication();
+   
 builder.Services.AddAuthorization();
 
 var app = builder.Build();

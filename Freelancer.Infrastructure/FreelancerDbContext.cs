@@ -1,4 +1,5 @@
 ﻿using Freelancer.Data.Models.Auth;
+using Freelancer.Data.Models.Misc;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -23,5 +24,7 @@ namespace Freelancer.Infrastructure
         }
 
         public DbSet<Fuser> fuser { get; set; }
+
+        public DbSet<Languages> Languages { get; set; }
     }
 }
